@@ -122,14 +122,13 @@ function startZookeeper({zkDir, zkPort}) {
   const mainClass = 'org.apache.zookeeper.server.quorum.QuorumPeerMain';
   let proc;
   if (isWindows) {
-    // const script = path.join(__dirname, 'kafka', 'bin', 'windows', 'zookeeper-server-start.bat');
     const script = path.join(__dirname, '..', 'kafka', 'bin', 'windows', 'kafka-run-class.bat');
     consoleDebug(`launching ${script}`);
-    // proc = spawn('cmd.exe', ['/c', script, mainClass, configFile], {cwd: zkDir, env});
     proc = spawn(script, [mainClass, configFile], {cwd: zkDir, env});
   } else {
     const script = path.join(__dirname, '..', 'kafka', 'bin', 'kafka-run-class.sh');
-    proc = spawn('sh', [script, mainClass, configFile], {cwd: zkDir, env});
+    consoleDebug(`launching ${script}`);
+    proc = spawn(script, [mainClass, configFile], {cwd: zkDir, env, shell: 'bash'});
   }
 
   proc.stdout.on('data', (data) => {
@@ -206,8 +205,12 @@ function startKafka({kafkaDir, kafkaPort, zkServer}) {
     proc = spawn(script, [mainClass, configFile], {cwd: kafkaDir, env});
     consoleDebug('spawned');
   } else {
-    const script = path.join(__dirname, '..', 'kafka', 'bin', 'kafka-server-start.sh');
-    proc = spawn('sh', [script, mainClass, configFile], {cwd: kafkaDir, env});
+    const script = path.join(__dirname, '..', 'kafka', 'bin', 'kafka-run-class.sh');
+    consoleDebug(`launching ${script}`);
+    consoleDebug('spawning...');
+    // proc = spawn('cmd.exe', ['/c', script, mainClass, configFile], {cwd: kafkaDir, env});
+    proc = spawn(script, [mainClass, configFile], {cwd: kafkaDir, env, shell: 'bash'});
+    consoleDebug('spawned');
   }
 
   consoleDebug('after if statement, lancuh');
