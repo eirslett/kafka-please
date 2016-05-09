@@ -2,3 +2,5 @@ language: node_js
 node_js:
   - "5.1"
 before_install: ./fetch.sh
+env:
+- KAFKA_PLEASE_LOG=verbose

@@ -15,7 +15,9 @@ const zkPropertiesFile = path.join(__dirname, '..', 'kafka', 'config', 'zookeepe
 const kafkaPropertiesFile = path.join(__dirname, '..', 'kafka', 'config', 'server.properties');
 
 function consoleDebug(msg, args) {
-  // console.log(msg, args)
+  if (process.env['KAFKA_PLEASE_LOG'] === 'verbose') {
+    console.log(msg, args)
+  }
 }
 
 const takenPorts = [];

@@ -3,7 +3,9 @@ const net = require('net');
 const zookeeper = require('node-zookeeper-client');
 
 function consoleDebug(msg, args) {
-  // console.log(msg, args)
+  if (process.env['KAFKA_PLEASE_LOG'] === 'verbose') {
+    console.log(msg, args)
+  }
 }
 
 // Performs the "ruok" - "imok" health check
