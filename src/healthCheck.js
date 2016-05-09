@@ -1,3 +1,4 @@
+'use strict';
 const net = require('net');
 const zookeeper = require('node-zookeeper-client');
 

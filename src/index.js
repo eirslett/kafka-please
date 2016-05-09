@@ -1,3 +1,4 @@
+'use strict';
 const {spawn} = require('child_process');
 const path = require('path');
 const {StringDecoder} = require('string_decoder');
