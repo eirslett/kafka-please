@@ -10,6 +10,7 @@ const {zookeeperHealthCheck, kafkaHealthCheck, waitForCheck, waitPromise} = requ
 
 const isWindows = process.platform === 'win32';
 const decoder = new StringDecoder('utf8');
+tmp.setGracefulCleanup();
 
 const zkPropertiesFile = path.join(__dirname, '..', 'kafka', 'config', 'zookeeper.properties');
 const kafkaPropertiesFile = path.join(__dirname, '..', 'kafka', 'config', 'server.properties');
@@ -64,7 +65,7 @@ function tmpDirPromise(prefix) {
   // return Promise.resolve('C:\\'+prefix+'tmp');
 
   return new Promise((resolve, reject) => {
-    tmp.dir({prefix}, (err, path) => {
+    tmp.dir({prefix, unsafeCleanup: true}, (err, path) => {
       if (err) {
         reject(err);
       } else {
