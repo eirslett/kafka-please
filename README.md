@@ -15,6 +15,8 @@ const makeKafkaServer = require('kafka-please');
 makeKafkaServer().then(kafkaServer => {
   // Do stuff that needs a Kafka broker here
   console.log('made kafka server', kafkaServer);
+  console.log('zookeeper listens on', kafkaServer.zookeeperPort);
+  console.log('kafka listens on', kafkaServer.kafkaPort);
 
   // Remember to shut down the server afterwards!
   return kafkaServer.close().then(() => {
