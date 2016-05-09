@@ -1,12 +1,17 @@
 {
   "name": "kafka-please",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A pre-built version of Kafka that can be started and stopped from Node.js",
   "main": "src/index.js",
   "scripts": {
     "test": "node node_modules/mocha/bin/mocha"
   },
-  "author": "",
+  "author": "Eirik Sletteberg",
+  "repository" :
+  {
+    "type" : "git",
+    "url" : "https://github.com/eirslett/kafka-please"
+  },
   "license": "Apache-2.0",
   "dependencies": {
     "node-zookeeper-client": "^0.2.2",
