@@ -1,0 +1,21 @@
+{
+  "name": "kafka-please",
+  "version": "0.1.0",
+  "description": "A pre-built version of Kafka that can be started and stopped from Node.js",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node node_modules/mocha/bin/mocha"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "node-zookeeper-client": "^0.2.2",
+    "portfinder": "^1.0.3",
+    "properties-parser": "^0.3.1",
+    "tmp": "0.0.28"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5"
+  }
+}
