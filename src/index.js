@@ -155,7 +155,7 @@ function startZookeeper({zkDir, zkPort}) {
 }
 
 function stopKafka() {
-  console.log('Stopping kafka...');
+  consoleDebug('Stopping kafka...');
   return new Promise((resolve, reject) => {
     let proc;
     if (isWindows) {
@@ -170,7 +170,7 @@ function stopKafka() {
 }
 
 function stopZookeeper() {
-  console.log('Stopping zookeeper...');
+  consoleDebug('Stopping zookeeper...');
   return new Promise((resolve, reject) => {
     let proc;
     if (isWindows) {
