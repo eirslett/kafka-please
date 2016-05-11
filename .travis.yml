@@ -1,6 +1,14 @@
 language: node_js
 node_js:
-  - "6"
+- '6'
 before_install: ./fetch.sh
 env:
 - KAFKA_PLEASE_LOG=verbose
+deploy:
+  provider: npm
+  email: eiriksletteberg@gmail.com
+  api_key:
+    secure: jE3mnzCVre/BK6kYweWQJmDvARyDU9G5vZnm4vUPe4b0fzGIFNXGRwYZfRyCMbjYsHuO0tyxP8MrHPC2+iMc1QtiEpwebjbgqY04eq28UVca2Jyp283bA97EteV7pyc0S+aGjIXrB1RyiS8ytir5rS6e/ukYzTkWohuX3vc041suol05dgcJOEmcy81ikV/4jkhfGHYj3NB3/U8vx51eotEAIncJuHuofUZFA89n0Nby82m//yevFVbvqqpjtClOlknTC3Ofneh2WjJiX1IoW8DsMuxJ4wOzO9rb962Z5R9Su1i1RMvq7oPQS9tiitHPQwgLe+DvF32F2LHn8xAR/H1nHS12V46ScG2gDIvjGTeg494Hcs8XAkP/JxmL9KoICZlwUrKwZ2Q1a+LMxLS89AsgEWfQcP98sk0S8nkK+Qehd3F5OVFiKxbCFXb2NlFoAxtx3V9hjRwcE9TlJ1m4DTWv05IAGLbBKZKdcveb4APxs6tJsaO7pLt7NGBjC5HG6FQPNslEybKCPmvNuQEd/4XNqRW9KnHkrjxICL1lD22frSiTb26rUNFI7RLad/Yeg93A51ioWwvXATQsf14l3ob3pAFgGKHebPePwb9XHxc59WOH69Sb/1UBtsBeZtA5CrPCUmH4DqlISSyr9iWMlasSrR5ohKduEVGLO89xPTw=
+  on:
+    tags: true
+    repo: eirslett/kafka-please
