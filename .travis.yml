@@ -12,3 +12,4 @@ deploy:
   on:
     tags: true
     repo: eirslett/kafka-please
+  skip_cleanup: true
