@@ -1,5 +1,5 @@
 'use strict';
-const {expect} = require('chai');
+const expect = require('chai').expect;
 const makeKafkaServer = require('../src/index');
 
 describe('Kafka please', () => {

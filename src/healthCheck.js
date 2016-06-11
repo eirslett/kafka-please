@@ -127,7 +127,10 @@ function waitPromise(length) {
   });
 }
 
-function waitForCheck(check, timeout=60000, waitBetweenRetries = 1000, elapsed=0) {
+function waitForCheck(check, timeout, waitBetweenRetries, elapsed) {
+  timeout = timeout || 60000;
+  waitBetweenRetries = waitBetweenRetries || 1000;
+  elapsed = elapsed || 0;
   if (elapsed > timeout) {
     return Promise.reject({});
   } else {

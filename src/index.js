@@ -1,12 +1,16 @@
 'use strict';
-const {spawn} = require('child_process');
+const spawn = require('child_process').spawn;
 const path = require('path');
-const {StringDecoder} = require('string_decoder');
+const StringDecoder = require('string_decoder').StringDecoder;
 const fs = require('fs');
 const tmp = require('tmp');
 const portfinder = require('portfinder');
-const {createEditor} = require('properties-parser');
-const {zookeeperHealthCheck, kafkaHealthCheck, waitForCheck, waitPromise} = require('./healthCheck');
+const createEditor = require('properties-parser').createEditor;
+const healthCheck = require('./healthCheck');
+const zookeeperHealthCheck = healthCheck.zookeeperHealthCheck;
+const kafkaHealthCheck = healthCheck.kafkaHealthCheck;
+const waitForCheck = healthCheck.waitForCheck;
+const waitPromise = healthCheck.waitPromise;
 
 const isWindows = process.platform === 'win32';
 const decoder = new StringDecoder('utf8');
@@ -51,7 +55,10 @@ function portPromise() {
 
 function portsPromise() {
   return new Promise((resolve, reject) => {
-    portfinder.getPorts(2, {}, (err, [zkPort, kafkaPort]) => {
+    portfinder.getPorts(2, {}, (err, ports) => {
+      const zkPort = ports[0];
+      const kafkaPort = ports[1];
+
       if (err) {
         reject(err);
       } else {
@@ -88,7 +95,9 @@ function copyFile(source, target) {
   });
 }
 
-function makeZookeeperConfigFile({zkDir, zkPort}) {
+function makeZookeeperConfigFile(zkData) {
+  const zkDir = zkData.zkDir;
+  const zkPort = zkData.zkPort;
   consoleDebug('zkport', zkPort);
   return new Promise((resolve, reject) =>
     createEditor(zkPropertiesFile, {}, (err, props) => {
@@ -101,7 +110,10 @@ function makeZookeeperConfigFile({zkDir, zkPort}) {
   );
 }
 
-function makeKafkaConfigFile({kafkaDir, zkPort, kafkaPort}) {
+function makeKafkaConfigFile(configData) {
+  const kafkaDir = configData.kafkaDir;
+  const zkPort = configData.zkPort;
+  const kafkaPort = configData.kafkaPort;
   consoleDebug('making kafka config file', kafkaDir);
   return new Promise((resolve, reject) =>
     createEditor(kafkaPropertiesFile, {}, (err, props) => {
@@ -115,7 +127,9 @@ function makeKafkaConfigFile({kafkaDir, zkPort, kafkaPort}) {
   );
 }
 
-function startZookeeper({zkDir, zkPort}) {
+function startZookeeper(zkConfig) {
+  const zkDir = zkConfig.zkDir;
+  const zkPort = zkConfig.zkPort;
   const configFile = path.join(zkDir, 'zookeeper.properties');
   const kafkaLog4jOpts = "-Dlog4j.configuration=file:"+path.join(__dirname, 'log4j-stdout.properties') // .replace(/\\/g, '\\\\');
   // const kafkaLog4jOpts = "-Dlog4j.configuration="+path.join(zkDir, 'log4j.properties') // .replace(/\\/g, '\\\\');
@@ -191,7 +205,11 @@ function killPromise(proc) {
   });
 }
 
-function startKafka({kafkaDir, kafkaPort, zkServer}) {
+function startKafka(configData) {
+  const kafkaDir = configData.kafkaDir;
+  const kafkaPort = configData.kafkaPort;
+  const zkServer = configData.zkServer;
+
   const configFile = path.join(kafkaDir, 'server.properties');
   const kafkaLog4jOpts = "-Dlog4j.configuration=file:"+path.join(__dirname, 'log4j-stdout.properties'); // .replace(/\\/g, '\\\\');
   const env = Object.assign({}, process.env, {KAFKA_LOG4J_OPTS: kafkaLog4jOpts, LOG_DIR: kafkaDir});
@@ -244,13 +262,13 @@ function startKafka({kafkaDir, kafkaPort, zkServer}) {
 }
 
 module.exports = function makeKafkaServer() {
-  return portsPromise().then(({zkPort, kafkaPort}) =>
+  return portsPromise().then((ports) =>
     tmpDirPromise('zookeeper-')
-      .then(zkDir => makeZookeeperConfigFile({zkDir, zkPort}).then(() =>
-        startZookeeper({zkDir, zkPort}).then(zkServer =>
+      .then(zkDir => makeZookeeperConfigFile({zkDir, zkPort: ports.zkPort}).then(() =>
+        startZookeeper({zkDir, zkPort: ports.zkPort}).then(zkServer =>
           tmpDirPromise('kafka-')
-            .then(kafkaDir => makeKafkaConfigFile({kafkaDir, zkPort, kafkaPort}).then(() =>
-              startKafka({kafkaDir, kafkaPort, zkServer})
+            .then(kafkaDir => makeKafkaConfigFile({kafkaDir, zkPort: ports.zkPort, kafkaPort: ports.kafkaPort}).then(() =>
+              startKafka({kafkaDir, kafkaPort: ports.kafkaPort, zkServer})
             ))
         )
       )));
