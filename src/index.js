@@ -56,14 +56,14 @@ function portPromise() {
 function portsPromise() {
   return new Promise((resolve, reject) => {
     portfinder.getPorts(2, {}, (err, ports) => {
+      if (err) {
+        return reject(err);
+      }
+
       const zkPort = ports[0];
       const kafkaPort = ports[1];
-
-      if (err) {
-        reject(err);
-      } else {
-        resolve({zkPort, kafkaPort});
-      }
+      
+      resolve({zkPort, kafkaPort});
     });
   })
 }
@@ -101,6 +101,10 @@ function makeZookeeperConfigFile(zkData) {
   consoleDebug('zkport', zkPort);
   return new Promise((resolve, reject) =>
     createEditor(zkPropertiesFile, {}, (err, props) => {
+      if (err) {
+        return reject(err);
+      }
+
       props.set('dataDir', zkDir.replace(/\\/g, '\\\\'));
       props.set('clientPort', zkPort.toString());
       props.set('zookeeper.log.dir', zkDir.replace(/\\/g, '\\\\'));
@@ -117,6 +121,10 @@ function makeKafkaConfigFile(configData) {
   consoleDebug('making kafka config file', kafkaDir);
   return new Promise((resolve, reject) =>
     createEditor(kafkaPropertiesFile, {}, (err, props) => {
+      if (err) {
+        return reject(err);
+      }
+
       props.set('log.dirs', kafkaDir.replace(/\\/g, '\\\\'));
       props.set('port', kafkaPort.toString());
       props.set('listeners', 'PLAINTEXT://:'+kafkaPort);
