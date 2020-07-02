@@ -1,3 +1,7 @@
+NB! This package is no longer maintained. To spin up a local Kafka instance for testing, try using [Testcontainers](https://github.com/testcontainers/testcontainers-node) instead, and run Kafka in a Docker container!
+
+---
+
 # Kafka Please
 
 This npm module lets you start up a Kafka broker (including ZooKeeper) locally.
